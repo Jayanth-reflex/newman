@@ -26,14 +26,14 @@ const logger = winston.createLogger({
 // Configuration
 const CONFIG = {
     collections: {
-        auth: path.resolve("D:/newman test run PROD/file types/OT API Access Authentication.postman_collection"),
-        update: path.resolve("D:/newman test run PROD/file types/MainFiletypeCollection.postman_collection")
+        auth: path.resolve(__dirname, "newman_files/OT API Access Authentication.postman_collection"),
+        update: path.resolve(__dirname, "newman_files/MainFiletypeCollection.postman_collection")
     },
-    environment: path.resolve("D:/newman test run PROD/file types/OT UAT API and BH Details.postman_environment.json"),
+    environment: path.resolve(__dirname, "newman_files/OT UAT API and BH Details.postman_environment.json"),
     inputFiles: [
-        path.resolve("D:/newman test run PROD/file types/input3.csv"),
-        path.resolve("D:/newman test run PROD/file types/input2.csv"),
-        path.resolve("D:/newman test run PROD/file types/input1.csv")
+        path.resolve(__dirname, "newman_files/input3.csv"),
+        path.resolve(__dirname, "newman_files/input2.csv"),
+        path.resolve(__dirname, "newman_files/input1.csv")
     ],
     delays: {
         betweenCollections: 10000,
