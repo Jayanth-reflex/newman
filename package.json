@@ -5,7 +5,8 @@
   "main": "newman.js",
   "dependencies": {
     "newman": "^5.3.2",
-    "async": "^3.2.4"
+    "async": "^3.2.4",
+    "winston": "^3.11.0"
   },
   "scripts": {
     "start": "node newman.js"
