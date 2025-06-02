@@ -1,0 +1,25 @@
+{
+  "info": {
+    "name": "MainFiletypeCollection",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Update File Type",
+      "request": {
+        "method": "PUT",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{authToken}}"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/api/filetype/{{fileId}}",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "filetype", "{{fileId}}"]
+        }
+      }
+    }
+  ]
+}
