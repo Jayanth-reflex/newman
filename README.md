@@ -1,106 +1,20 @@
-const newman = require('newman');
-const fs = require('fs');
+# Newman CLI Overview and Advantages Over Postman
 
-// Paths to collections and environment file
-const AUTH_COLLECTION = "D:/newman test run PROD/file types/OT API Access Authentication.postman_collection";
-const UPDATE_COLLECTION = "D:/newman test run PROD/file types/MainFiletypeCollection.postman_collection";
-const ENVIRONMENT = "D:/newman test run PROD/file types/OT UAT API and BH Details.postman_environment.json";
+**Newman** is a command-line companion to **Postman**, designed for automated, headless API testing, ideal for **CI/CD environments**. It runs Postman collections from the terminal, supporting custom reporting, integration, and efficient execution for continuous testing.
 
-// Array of input files
-const inputFiles = [
-    "D:/newman test run PROD/file types/input3.csv",
-	"D:/newman test run PROD/file types/input2.csv",
-    "D:/newman test run PROD/file types/input1.csv"
-];
+## Key Features:
+- **Headless Execution**: Runs tests via CLI, perfect for automation and CI/CD pipelines.
+- **CI/CD Integration**: Easily integrates with Jenkins, GitLab, CircleCI, etc., enabling automated testing during build or deployment cycles.
+- **Customizable Reporting**: Supports reports in **HTML**, **JSON**, and **JUnit** formats for seamless integration with external tools.
+- **Environment Support**: Easily manage environments and variables via CLI for different stages (dev, staging, prod).
+- **Cross-Platform Compatibility**: Runs on **Windows**, **macOS**, and **Linux**, making it suitable for diverse environments.
 
-// Function to log request and response (without DataSubjectId and UrlEncodedLinkToken extraction)
-function logRequestResponse(args, isResponse = false) {
-    const data = isResponse 
-        ? (args.response.stream ? args.response.stream.toString() : "No response body") 
-        : (args.request.body ? args.request.body.raw : "No request body");
+## Advantages Over Postman:
+- **Automation**: Newman is headless, making it better for automated, non-interactive execution compared to Postman’s GUI-based interface.
+- **CI/CD Integration**: Unlike Postman, Newman seamlessly integrates into CI/CD systems for continuous testing.
+- **Customizable Reports**: Newman offers more flexible and detailed reporting options compared to Postman’s built-in features.
+- **Environment Flexibility**: Easily pass environments via the command line, providing dynamic testing configurations.
+- **Execution Control**: Newman allows more granular control over test execution (iterations, concurrency), making it ideal for performance testing.
 
-    if (isResponse && data) {
-        try {
-            const parsedData = JSON.parse(data);
-            console.log("Valid JSON response:", parsedData);
-        } catch (error) {
-            console.error("Invalid JSON response or empty response:", data);
-        }
-    }
-}
-
-// Function to get the number of iterations from the input file
-function getIterationCount(inputFile) {
-    return new Promise((resolve, reject) => {
-        fs.readFile(inputFile, 'utf8', (err, data) => {
-            if (err) {
-                reject(err);
-            } else {
-                const lines = data.trim().split('\n');
-                const count = lines.length - 1; // Subtract 1 for the header line if present
-                resolve(count);
-            }
-        });
-    });
-}
-
-// Function to run the collections for each input file
-async function runCollections(inputFile) {
-    console.log("Running AUTH_COLLECTION to generate token...");
-    await new Promise((resolve) => {
-        newman.run({
-            collection: AUTH_COLLECTION,
-            environment: ENVIRONMENT,
-            insecure: true,
-            reporters: 'cli',
-            exportEnvironment: ENVIRONMENT
-        }).on('done', function () {
-            console.log("AUTH_COLLECTION run complete.");
-            resolve();
-        });
-    });
-
-    console.log("Waiting for 10 seconds before running the UPDATE_COLLECTION...");
-    await new Promise(resolve => setTimeout(resolve, 10000)); // Wait for 10 seconds
-
-    const iterationCount = await getIterationCount(inputFile);
-    console.log(`Running UPDATE_COLLECTION with ${iterationCount} iterations using input file: ${inputFile}`);
-
-    return new Promise((resolve) => {
-        newman.run({
-            collection: UPDATE_COLLECTION,
-            environment: ENVIRONMENT,
-            iterationData: inputFile,
-            insecure: true,
-            reporters: 'cli'
-        }).on('beforeRequest', function (error, args) {
-            if (error) {
-                console.error("Error in beforeRequest:", error);
-            } else {
-                logRequestResponse(args, false);
-            }
-        }).on('request', function (error, args) {
-            if (error) {
-                console.error("Error in request:", error);
-            } else {
-                logRequestResponse(args, true);
-            }
-        }).on('done', function () {
-            console.log("UPDATE_COLLECTION run complete.");
-            resolve(); // Resolve the promise when done
-        });
-    });
-}
-
-// Execute for all input files in sequence
-async function executeAllInputFiles() {
-    for (const inputFile of inputFiles) {
-        await runCollections(inputFile);
-        console.log("Waiting for 60 seconds before running the next AUTH_COLLECTION...");
-        await new Promise(resolve => setTimeout(resolve, 20000)); // Wait for 20 seconds
-    }
-    console.log("All collections executed. Data saved.");
-}
-
-// Start the execution
-executeAllInputFiles().catch(err => console.error("Error during execution:", err));
+## Conclusion:
+Newman is optimized for **automated testing**, **CI/CD integration**, and large-scale test execution, while Postman is better suited for **manual testing** and exploration. Teams seeking continuous, automated testing in a DevOps pipeline should leverage Newman for higher efficiency and flexibility.
