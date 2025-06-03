@@ -1,0 +1,4 @@
+{"level":"info","message":"Starting job for input3","timestamp":"2025-06-03T00:00:05.414Z"}
+{"level":"info","message":"Running AUTH_COLLECTION for input3","timestamp":"2025-06-03T00:00:05.415Z"}
+{"level":"info","message":"Starting job for input2","timestamp":"2025-06-03T00:00:05.416Z"}
+{"level":"info","message":"Running AUTH_COLLECTION for input2","timestamp":"2025-06-03T00:00:05.416Z"}

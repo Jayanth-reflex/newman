@@ -26,8 +26,8 @@ const logger = winston.createLogger({
 // Configuration
 const CONFIG = {
     collections: {
-        auth: path.resolve(__dirname, "newman_files/OT API Access Authentication.postman_collection"),
-        update: path.resolve(__dirname, "newman_files/MainFiletypeCollection.postman_collection")
+        auth: path.resolve(__dirname, "newman_files/OT API Access Authentication.postman_collection.json"),
+        update: path.resolve(__dirname, "newman_files/MainFiletypeCollection.postman_collection.json")
     },
     environment: path.resolve(__dirname, "newman_files/OT UAT API and BH Details.postman_environment.json"),
     inputFiles: [
