@@ -1,176 +1,106 @@
 const newman = require('newman');
-const async = require('async');
-const fs = require('fs').promises;
-const path = require('path');
-const winston = require('winston');
+const fs = require('fs');
 
-// Configure logger
-const logger = winston.createLogger({
-    level: 'info',
-    format: winston.format.combine(
-        winston.format.timestamp(),
-        winston.format.json()
-    ),
-    transports: [
-        new winston.transports.File({ filename: 'error.log', level: 'error' }),
-        new winston.transports.File({ filename: 'combined.log' }),
-        new winston.transports.Console({
-            format: winston.format.combine(
-                winston.format.colorize(),
-                winston.format.simple()
-            )
-        })
-    ]
-});
+// Paths to collections and environment file
+const AUTH_COLLECTION = "D:/newman test run PROD/file types/OT API Access Authentication.postman_collection";
+const UPDATE_COLLECTION = "D:/newman test run PROD/file types/MainFiletypeCollection.postman_collection";
+const ENVIRONMENT = "D:/newman test run PROD/file types/OT UAT API and BH Details.postman_environment.json";
 
-// Configuration
-const CONFIG = {
-    collections: {
-        auth: path.resolve(__dirname, "newman_files/OT API Access Authentication.postman_collection.json"),
-        update: path.resolve(__dirname, "newman_files/MainFiletypeCollection.postman_collection.json")
-    },
-    environment: path.resolve(__dirname, "newman_files/OT UAT API and BH Details.postman_environment.json"),
-    inputFiles: [
-        path.resolve(__dirname, "newman_files/input3.csv"),
-        path.resolve(__dirname, "newman_files/input2.csv"),
-        path.resolve(__dirname, "newman_files/input1.csv")
-    ],
-    delays: {
-        betweenCollections: 10000,
-        betweenFiles: 20000
-    },
-    maxParallelRuns: parseInt(process.argv[2]) || 2
-};
+// Array of input files
+const inputFiles = [
+    "D:/newman test run PROD/file types/input3.csv",
+	"D:/newman test run PROD/file types/input2.csv",
+    "D:/newman test run PROD/file types/input1.csv"
+];
 
-// Validate file existence
-async function validateFiles() {
-    const allFiles = [
-        CONFIG.collections.auth,
-        CONFIG.collections.update,
-        CONFIG.environment,
-        ...CONFIG.inputFiles
-    ];
+// Function to log request and response (without DataSubjectId and UrlEncodedLinkToken extraction)
+function logRequestResponse(args, isResponse = false) {
+    const data = isResponse 
+        ? (args.response.stream ? args.response.stream.toString() : "No response body") 
+        : (args.request.body ? args.request.body.raw : "No request body");
 
-    for (const file of allFiles) {
+    if (isResponse && data) {
         try {
-            await fs.access(file);
+            const parsedData = JSON.parse(data);
+            console.log("Valid JSON response:", parsedData);
         } catch (error) {
-            throw new Error(`File not found: ${file}`);
+            console.error("Invalid JSON response or empty response:", data);
         }
     }
 }
 
-// Get iteration count from input file
-async function getIterationCount(inputFile) {
-    try {
-        const data = await fs.readFile(inputFile, 'utf8');
-        const lines = data.trim().split('\n');
-        return Math.max(0, lines.length - 1); // Subtract header, ensure non-negative
-    } catch (error) {
-        throw new Error(`Failed to read input file ${inputFile}: ${error.message}`);
-    }
-}
-
-// Run Newman collection with proper error handling
-function runNewmanCollection(options) {
+// Function to get the number of iterations from the input file
+function getIterationCount(inputFile) {
     return new Promise((resolve, reject) => {
-        newman.run(options)
-            .on('beforeRequest', (err, args) => {
-                if (err) {
-                    logger.error('Error in beforeRequest:', { error: err, request: args.request.url });
-                }
-            })
-            .on('request', (err, args) => {
-                if (err) {
-                    logger.error('Error in request:', { error: err, response: args.response.code });
-                } else {
-                    logger.info('Request successful:', {
-                        url: args.request.url,
-                        status: args.response.code
-                    });
-                }
-            })
-            .on('done', (err, summary) => {
-                if (err || summary.error) {
-                    reject(new Error(`Newman run failed: ${err || summary.error}`));
-                } else {
-                    resolve(summary);
-                }
-            });
+        fs.readFile(inputFile, 'utf8', (err, data) => {
+            if (err) {
+                reject(err);
+            } else {
+                const lines = data.trim().split('\n');
+                const count = lines.length - 1; // Subtract 1 for the header line if present
+                resolve(count);
+            }
+        });
     });
 }
 
-// Process single input file
-async function processInputFile(inputFile) {
-    const jobId = path.basename(inputFile, '.csv');
-    logger.info(`Starting job for ${jobId}`);
-
-    try {
-        // Run auth collection
-        logger.info(`Running AUTH_COLLECTION for ${jobId}`);
-        await runNewmanCollection({
-            collection: CONFIG.collections.auth,
-            environment: CONFIG.environment,
+// Function to run the collections for each input file
+async function runCollections(inputFile) {
+    console.log("Running AUTH_COLLECTION to generate token...");
+    await new Promise((resolve) => {
+        newman.run({
+            collection: AUTH_COLLECTION,
+            environment: ENVIRONMENT,
             insecure: true,
             reporters: 'cli',
-            exportEnvironment: CONFIG.environment
+            exportEnvironment: ENVIRONMENT
+        }).on('done', function () {
+            console.log("AUTH_COLLECTION run complete.");
+            resolve();
         });
+    });
 
-        // Wait between collections
-        await new Promise(resolve => setTimeout(resolve, CONFIG.delays.betweenCollections));
+    console.log("Waiting for 10 seconds before running the UPDATE_COLLECTION...");
+    await new Promise(resolve => setTimeout(resolve, 10000)); // Wait for 10 seconds
 
-        // Get iteration count and run update collection
-        const iterationCount = await getIterationCount(inputFile);
-        logger.info(`Running UPDATE_COLLECTION for ${jobId} with ${iterationCount} iterations`);
-        
-        await runNewmanCollection({
-            collection: CONFIG.collections.update,
-            environment: CONFIG.environment,
+    const iterationCount = await getIterationCount(inputFile);
+    console.log(`Running UPDATE_COLLECTION with ${iterationCount} iterations using input file: ${inputFile}`);
+
+    return new Promise((resolve) => {
+        newman.run({
+            collection: UPDATE_COLLECTION,
+            environment: ENVIRONMENT,
             iterationData: inputFile,
             insecure: true,
             reporters: 'cli'
-        });
-
-        logger.info(`Completed job for ${jobId}`);
-    } catch (error) {
-        logger.error(`Failed to process ${jobId}:`, error);
-        throw error;
-    }
-}
-
-// Main execution function
-async function main() {
-    try {
-        // Validate files before starting
-        await validateFiles();
-
-        // Create queue for parallel processing
-        const queue = async.queue(async (inputFile) => {
-            try {
-                await processInputFile(inputFile);
-                await new Promise(resolve => setTimeout(resolve, CONFIG.delays.betweenFiles));
-            } catch (error) {
-                logger.error(`Queue processing error for ${inputFile}:`, error);
+        }).on('beforeRequest', function (error, args) {
+            if (error) {
+                console.error("Error in beforeRequest:", error);
+            } else {
+                logRequestResponse(args, false);
             }
-        }, CONFIG.maxParallelRuns);
-
-        // Add all input files to queue
-        queue.push(CONFIG.inputFiles);
-
-        // Wait for queue to complete
-        await new Promise((resolve) => {
-            queue.drain(resolve);
+        }).on('request', function (error, args) {
+            if (error) {
+                console.error("Error in request:", error);
+            } else {
+                logRequestResponse(args, true);
+            }
+        }).on('done', function () {
+            console.log("UPDATE_COLLECTION run complete.");
+            resolve(); // Resolve the promise when done
         });
-
-        logger.info('All collections executed successfully');
-    } catch (error) {
-        logger.error('Fatal error:', error);
-        process.exit(1);
-    }
+    });
 }
 
-// Start execution
-main().catch(error => {
-    logger.error('Unhandled error:', error);
-    process.exit(1);
-});
+// Execute for all input files in sequence
+async function executeAllInputFiles() {
+    for (const inputFile of inputFiles) {
+        await runCollections(inputFile);
+        console.log("Waiting for 60 seconds before running the next AUTH_COLLECTION...");
+        await new Promise(resolve => setTimeout(resolve, 20000)); // Wait for 20 seconds
+    }
+    console.log("All collections executed. Data saved.");
+}
+
+// Start the execution
+executeAllInputFiles().catch(err => console.error("Error during execution:", err));
