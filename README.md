@@ -7,19 +7,21 @@ A command-line utility that automates Postman collections using [Newman](https:/
 
 ## Table of Contents
 
-1. [Newman CLI Overview](#newman-cli-overview)  
-2. [Key Features of Newman](#key-features-of-newman)  
-3. [Advantages Over Postman](#advantages-over-postman)  
-4. [Project Features](#project-features)  
-5. [Prerequisites](#prerequisites)  
-6. [Configuration](#configuration)  
-7. [Script Overview (`script.js`)](#script-overview-scriptjs)  
-8. [Running the Script](#running-the-script)  
-9. [Example Output](#example-output)  
-10. [Next Steps](#next-steps)  
-11. [Conclusion](#conclusion)  
-12. [Support](#support)   
-13. [References](#references)
+| #  | Section                                |
+|----|----------------------------------------|
+| 1  | [Newman CLI Overview](#newman-cli-overview)            |
+| 2  | [Key Features of Newman](#key-features-of-newman)      |
+| 3  | [Advantages Over Postman](#advantages-over-postman)    |
+| 4  | [Project Features](#project-features)                  |
+| 5  | [Prerequisites](#prerequisites)                        |
+| 6  | [Configuration](#configuration)                        |
+| 7  | [Script Overview (`script.js`)](#script-overview-scriptjs) |
+| 8  | [Running the Script](#running-the-script)               |
+| 9  | [Example Output](#example-output)                       |
+| 10 | [Next Steps](#next-steps)                               |
+| 11 | [Conclusion](#conclusion)                               |
+| 12 | [Support](#support)                                     |
+| 13 | [References](#references)                               |
 
 ---
 
