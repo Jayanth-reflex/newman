@@ -7,21 +7,69 @@ A command-line utility that automates Postman collections using [Newman](https:/
 
 ## Table of Contents
 
-| #  | Section                                |
-|----|----------------------------------------|
-| 1  | [Newman CLI Overview](#newman-cli-overview)            |
-| 2  | [Key Features of Newman](#key-features-of-newman)      |
-| 3  | [Advantages Over Postman](#advantages-over-postman)    |
-| 4  | [Project Features](#project-features)                  |
-| 5  | [Prerequisites](#prerequisites)                        |
-| 6  | [Configuration](#configuration)                        |
-| 7  | [Script Overview (`script.js`)](#script-overview-scriptjs) |
-| 8  | [Running the Script](#running-the-script)               |
-| 9  | [Example Output](#example-output)                       |
-| 10 | [Next Steps](#next-steps)                               |
-| 11 | [Conclusion](#conclusion)                               |
-| 12 | [Support](#support)                                     |
-| 13 | [References](#references)                               |
+<table>
+  <thead>
+    <tr>
+      <th>#</th>
+      <th>Section</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>1</td>
+      <td><a href="#newman-cli-overview">Newman CLI Overview</a></td>
+    </tr>
+    <tr>
+      <td>2</td>
+      <td><a href="#key-features-of-newman">Key Features of Newman</a></td>
+    </tr>
+    <tr>
+      <td>3</td>
+      <td><a href="#advantages-over-postman">Advantages Over Postman</a></td>
+    </tr>
+    <tr>
+      <td>4</td>
+      <td><a href="#project-features">Project Features</a></td>
+    </tr>
+    <tr>
+      <td>5</td>
+      <td><a href="#prerequisites">Prerequisites</a></td>
+    </tr>
+    <tr>
+      <td>6</td>
+      <td><a href="#configuration">Configuration</a></td>
+    </tr>
+    <tr>
+      <td>7</td>
+      <td><a href="#script-overview-scriptjs">Script Overview (<code>script.js</code>)</a></td>
+    </tr>
+    <tr>
+      <td>8</td>
+      <td><a href="#running-the-script">Running the Script</a></td>
+    </tr>
+    <tr>
+      <td>9</td>
+      <td><a href="#example-output">Example Output</a></td>
+    </tr>
+    <tr>
+      <td>10</td>
+      <td><a href="#next-steps">Next Steps</a></td>
+    </tr>
+    <tr>
+      <td>11</td>
+      <td><a href="#conclusion">Conclusion</a></td>
+    </tr>
+    <tr>
+      <td>12</td>
+      <td><a href="#support">Support</a></td>
+    </tr>
+    <tr>
+      <td>13</td>
+      <td><a href="#references">References</a></td>
+    </tr>
+  </tbody>
+</table>
+
 
 ---
 
