@@ -18,8 +18,8 @@ A command-line utility that automates Postman collections using [Newman](https:/
 9. [Example Output](#example-output)  
 10. [Next Steps](#next-steps)  
 11. [Conclusion](#conclusion)  
-12. [Support](#support)  
-13. [License](#license)
+12. [Support](#support)   
+13. [References](#references)
 
 ---
 
@@ -149,10 +149,13 @@ Newman excels at **automated, headless testing** and **CI/CD integration**, whil
 
 ---
 
-## 
+## Support
 
 For questions or issues, please open an issue in the project repository.
 
 ---
 
+## References
+
+- [Official Newman Documentation](https://github.com/postmanlabs/newman)
 </pre>
