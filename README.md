@@ -1,4 +1,3 @@
-<pre>
 # Newman-Based API Test Runner with Input Iterations
 
 A command-line utility that automates Postman collections using [Newman](https://github.com/postmanlabs/newman). Ideal for CI/CD pipelines, it handles authentication, token generation, and data-driven execution via CSV files—complete with request/response logging and built-in delays to avoid race conditions.
@@ -70,7 +69,6 @@ A command-line utility that automates Postman collections using [Newman](https:/
   </tbody>
 </table>
 
-
 ---
 
 ## Newman CLI Overview
@@ -116,9 +114,9 @@ A command-line utility that automates Postman collections using [Newman](https:/
 - **Newman** installed globally:  
   <code>npm install -g newman</code>  
 - Postman collections and environment JSON:  
-  - `Authentication.postman_collection`  
-  - `OperationalCollection.postman_collection`  
-  - `Environment.postman_environment.json`  
+  - <code>Authentication.postman_collection</code>  
+  - <code>OperationalCollection.postman_collection</code>  
+  - <code>Environment.postman_environment.json</code>  
 - Optional CSV input files (each with header row + data rows)
 
 ---
@@ -132,11 +130,11 @@ A command-line utility that automates Postman collections using [Newman](https:/
    <code>Environment.postman_environment.json</code>
 
 2. **Input Files**  
-   - Ensure each CSV (e.g., `input1.csv`) has a header row followed by data rows.  
-   - Add the filenames to the `inputFiles` array at the top of `script.js`.
+   - Ensure each CSV (e.g., <code>input1.csv</code>) has a header row followed by data rows.  
+   - Add the filenames to the `inputFiles` array at the top of <code>script.js</code>.
 
 3. **Adjustable Delays**  
-   - Modify `AUTH_DELAY_MS` and `BATCH_DELAY_MS` constants in `script.js` if needed.
+   - Modify `AUTH_DELAY_MS` and `BATCH_DELAY_MS` constants in <code>script.js</code> if needed.
 
 ---
 
@@ -186,8 +184,8 @@ All collections executed. Data saved.
 
 ## Next Steps
 
-- Add new CSV files to `inputFiles` in `script.js`.  
-- Integrate `node script.js` into your CI/CD pipeline’s test stage.  
+- Add new CSV files to `inputFiles` in <code>script.js</code>.  
+- Integrate <code>node script.js</code> into your CI/CD pipeline’s test stage.  
 - Extend logging to write to files or external logging services.  
 - Implement additional error-reporting (e.g., Slack notifications).
 
@@ -208,4 +206,3 @@ For questions or issues, please open an issue in the project repository.
 ## References
 
 - [Official Newman Documentation](https://github.com/postmanlabs/newman)
-</pre>
