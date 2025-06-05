@@ -1,82 +1,158 @@
-# Newman CLI Overview and Advantages Over Postman
+<pre>
+# Newman-Based API Test Runner with Input Iterations
 
-**Newman** is a command-line companion to **Postman**, designed for automated, headless API testing, ideal for **CI/CD environments**. It runs Postman collections from the terminal, supporting custom reporting, integration, and efficient execution for continuous testing.
-
-## Key Features:
-- **Headless Execution**: Runs tests via CLI, perfect for automation and CI/CD pipelines.
-- **CI/CD Integration**: Easily integrates with Jenkins, GitLab, CircleCI, etc., enabling automated testing during build or deployment cycles.
-- **Customizable Reporting**: Supports reports in **HTML**, **JSON**, and **JUnit** formats for seamless integration with external tools.
-- **Environment Support**: Easily manage environments and variables via CLI for different stages (dev, staging, prod).
-- **Cross-Platform Compatibility**: Runs on **Windows**, **macOS**, and **Linux**, making it suitable for diverse environments.
-
-## Advantages Over Postman:
-- **Automation**: Newman is headless, making it better for automated, non-interactive execution compared to Postman’s GUI-based interface.
-- **CI/CD Integration**: Unlike Postman, Newman seamlessly integrates into CI/CD systems for continuous testing.
-- **Customizable Reports**: Newman offers more flexible and detailed reporting options compared to Postman’s built-in features.
-- **Environment Flexibility**: Easily pass environments via the command line, providing dynamic testing configurations.
-- **Execution Control**: Newman allows more granular control over test execution (iterations, concurrency), making it ideal for performance testing.
-
+A command-line utility that automates Postman collections using [Newman](https://github.com/postmanlabs/newman). Ideal for CI/CD pipelines, it handles authentication, token generation, and data-driven execution via CSV files—complete with request/response logging and built-in delays to avoid race conditions.
 
 ---
 
-## 🚀 Features
+## Table of Contents
 
-- **Authentication Collection**: Generates a token before each data processing run.
-- **Operational Collection**: Executes requests iteratively using data from CSV files.
-- **Logging**: Logs request body and response body (if valid JSON) to the console.
-- **Delay Handling**: Ensures proper timing between collection runs to avoid race conditions.
-
----
-
-## 📋 Prerequisites
-
-- [Node.js](https://nodejs.org/) (v14+ recommended)
-- Newman (`npm install -g newman`)
-- Your Postman collections and environment JSON files
-- Optional: CSV input files (header row followed by test data)
-
----
-
-## ⚙️ Configuration
-
-1. Place your Postman collections and environment file in the project root:
-   - `Authentication.postman_collection`
-   - `OperationalCollection.postman_collection`
-   - `Environment.postman_environment.json`
-
-2. Add your data files:
-   - Ensure CSVs (e.g., `input1.csv`) are in the correct format (header + rows).
-   - Add the filenames to the `inputFiles` array in `script.js`.
+1. [Newman CLI Overview](#newman-cli-overview)  
+2. [Key Features of Newman](#key-features-of-newman)  
+3. [Advantages Over Postman](#advantages-over-postman)  
+4. [Project Features](#project-features)  
+5. [Prerequisites](#prerequisites)  
+6. [Configuration](#configuration)  
+7. [Script Overview (`script.js`)](#script-overview-scriptjs)  
+8. [Running the Script](#running-the-script)  
+9. [Example Output](#example-output)  
+10. [Next Steps](#next-steps)  
+11. [Conclusion](#conclusion)  
+12. [Support](#support)  
+13. [License](#license)
 
 ---
 
-## 🧠 Script Overview (`script.js`)
+## Newman CLI Overview
 
-### Main Functional Blocks:
-
-- `runCollections(inputFile)`: 
-  - Runs the authentication collection first.
-  - Waits 10 seconds for token propagation.
-  - Then, it runs the operational collection with input file iterations.
-
-- `logRequestResponse(args, isResponse)`: 
-  - Logs request body (raw) and response body (JSON if valid).
-  - Skips specific parsing like `DataSubjectId` or `UrlEncodedLinkToken`.
-
-- `getIterationCount(inputFile)`:
-  Calculates the number of iterations based on the number of rows in the CSV file.
-
-- `executeAllInputFiles()`:
-  - Sequentially processes all input files listed.
-  - Adds a 20-second delay between batches to manage server load or token expiration risks.
+**Newman** is the headless command-line companion to Postman, built for automated API testing in CI/CD environments. It executes Postman collections without a GUI, supports multiple reporters, and can be integrated into any pipeline.
 
 ---
 
-## 🏁 Running the Script
+## Key Features of Newman
 
-```bash
-node script.js
+- **Headless Execution**: Invoke collections via CLI for non-interactive automation.  
+- **CI/CD Integration**: Works seamlessly with Jenkins, GitLab CI, CircleCI, Azure DevOps, and more.  
+- **Custom Reporting**: Output in CLI, HTML, JSON, or JUnit formats for easy consumption.  
+- **Environment Support**: Pass and export environment files to target dev, staging, or prod setups.  
+- **Cross-Platform**: Compatible with Windows, macOS, and Linux.
 
+---
 
-## Conclusion:
-Newman is optimized for **automated testing**, **CI/CD integration**, and large-scale test execution, while Postman is better suited for **manual testing** and exploration. Teams seeking continuous, automated testing in a DevOps pipeline should leverage Newman for higher efficiency and flexibility.
+## Advantages Over Postman
+
+- **Automation Focus**: Designed for scripted, repeatable runs; no manual clicks required.  
+- **Deeper CI/CD Integration**: Built-in support for pipeline hooks, exit codes, and parallel runs.  
+- **Flexible Reporting**: Choose your format and level of detail for integration with external dashboards.  
+- **Dynamic Environments**: Swap environment variables on the fly via CLI flags.  
+- **Execution Control**: Fine-grained options for iteration counts, delays, and concurrency.
+
+---
+
+## Project Features
+
+- **Authentication Collection**: Generates an access token before each data run.  
+- **Operational Collection**: Processes CSV files iteratively, one row per request.  
+- **Logging**: Streams raw request bodies and validates JSON responses to the console.  
+- **Delay Handling**:  
+    - `AUTH_DELAY_MS` (default 10 000 ms) between auth and operational runs.  
+    - `BATCH_DELAY_MS` (default 20 000 ms) between different input files.
+
+---
+
+## Prerequisites
+
+- **Node.js** (v14+ recommended)  
+- **Newman** installed globally:  
+  <code>npm install -g newman</code>  
+- Postman collections and environment JSON:  
+  - `Authentication.postman_collection`  
+  - `OperationalCollection.postman_collection`  
+  - `Environment.postman_environment.json`  
+- Optional CSV input files (each with header row + data rows)
+
+---
+
+## Configuration
+
+1. **Collections & Environment**  
+   Place the following files in your project root:  
+   <code>Authentication.postman_collection</code>  
+   <code>OperationalCollection.postman_collection</code>  
+   <code>Environment.postman_environment.json</code>
+
+2. **Input Files**  
+   - Ensure each CSV (e.g., `input1.csv`) has a header row followed by data rows.  
+   - Add the filenames to the `inputFiles` array at the top of `script.js`.
+
+3. **Adjustable Delays**  
+   - Modify `AUTH_DELAY_MS` and `BATCH_DELAY_MS` constants in `script.js` if needed.
+
+---
+
+## Script Overview (`script.js`)
+
+- **`runCollections(inputFile)`**  
+    - Runs the auth collection to refresh the token.  
+    - Waits `AUTH_DELAY_MS`.  
+    - Runs the operational collection with `iterationData` from the CSV.
+
+- **`logRequestResponse(args, isResponse)`**  
+    - On each request: logs raw body.  
+    - On each response: attempts JSON parse, logs parsed object or raw text.
+
+- **`getIterationCount(inputFile)`**  
+    - Reads CSV, counts rows minus header to determine iteration count.
+
+- **`executeAllInputFiles()`**  
+    - Loops through `inputFiles`, calls `runCollections` for each.  
+    - Waits `BATCH_DELAY_MS` between runs.
+
+---
+
+## Running the Script
+
+<code>node script.js</code>
+
+Ensure you have the correct files in place and Newman installed.
+
+---
+
+## Example Output
+
+<code>
+Running AUTH_COLLECTION to generate token...  
+✔ AUTH_COLLECTION run complete.  
+Waiting for 10 seconds before running the UPDATE_COLLECTION...  
+Running UPDATE_COLLECTION with 5 iterations using input file: input1.csv  
+→ Request: {"username":"user1","action":"update"}  
+← Response: {"status":"success","id":12345}  
+…  
+Waiting for 20 seconds before next input file…  
+All collections executed. Data saved.  
+</code>
+
+---
+
+## Next Steps
+
+- Add new CSV files to `inputFiles` in `script.js`.  
+- Integrate `node script.js` into your CI/CD pipeline’s test stage.  
+- Extend logging to write to files or external logging services.  
+- Implement additional error-reporting (e.g., Slack notifications).
+
+---
+
+## Conclusion
+
+Newman excels at **automated, headless testing** and **CI/CD integration**, while Postman’s GUI is better for manual API exploration. For teams aiming to embed API tests in a DevOps pipeline, Newman delivers greater flexibility and reliability.
+
+---
+
+## 
+
+For questions or issues, please open an issue in the project repository.
+
+---
+
+</pre>
