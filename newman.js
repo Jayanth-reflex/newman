@@ -2,15 +2,13 @@ const newman = require('newman');
 const fs = require('fs');
 
 // Paths to collections and environment file
-const AUTH_COLLECTION = "D:/newman test run PROD/file types/OT API Access Authentication.postman_collection";
-const UPDATE_COLLECTION = "D:/newman test run PROD/file types/MainFiletypeCollection.postman_collection";
-const ENVIRONMENT = "D:/newman test run PROD/file types/OT UAT API and BH Details.postman_environment.json";
+const AUTH_COLLECTION = "Authentication.postman_collection";
+const UPDATE_COLLECTION = "OperationalCollection.postman_collection";
+const ENVIRONMENT = "Environment.postman_environment.json";
 
 // Array of input files
 const inputFiles = [
-    "D:/newman test run PROD/file types/input3.csv",
-	"D:/newman test run PROD/file types/input2.csv",
-    "D:/newman test run PROD/file types/input1.csv"
+    "input1.csv","input2.csv","input3.csv"  // provide your input files path used for processing in the Operational Collection
 ];
 
 // Function to log request and response (without DataSubjectId and UrlEncodedLinkToken extraction)
