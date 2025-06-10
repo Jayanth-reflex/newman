@@ -1,6 +1,7 @@
 # Newman-Based API Test Runner with Input Iterations
 
-A command-line utility that automates Postman collections using [Newman](https://github.com/postmanlabs/newman). Ideal for CI/CD pipelines, it handles authentication, token generation, and data-driven execution via CSV files—complete with request/response logging and built-in delays to avoid race conditions.
+A command-line utility that automates Postman collections using [Newman](https://github.com/postmanlabs/newman). 
+Ideal for CI/CD pipelines, tests or updates, it handles authentication, token generation, and data-driven execution via CSV files—complete with request/response logging and built-in delays to avoid race conditions.
 
 ---
 
